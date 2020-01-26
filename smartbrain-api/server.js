@@ -1,8 +1,12 @@
 const express = require('express');
 const app = express();
+const bcrypt = require('bcrypt-nodejs')
+const cors = require('cors');
+
 
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
+app.use(cors());
 
 const database = {
     users: [
@@ -31,7 +35,7 @@ app.get('/', (req, res) => {
 
 app.post('/signin', (req, res) => {
     if (req.body.email === database.users[0].email && req.body.password === database.users[0].password) {
-        res.json('Success!')
+        res.json(database.users[0])
     } else {
         res.status(400).json('error logging in');
     }
@@ -43,13 +47,13 @@ app.post('/register', (req, res) => {
         id: '125',
         name: name,
         email: email,
-        password: password,
         entries: 0,
         joined: new Date()
     });
     res.json(database.users[database.users.length - 1]);
 })
 
+// Unused; For the future
 app.get('/profile/:id', (req, res) => {
     const { id } = req.params;
     let found = false;
